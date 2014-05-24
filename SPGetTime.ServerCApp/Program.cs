@@ -1,35 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SPGetTime.ServerCApp
 {
-
   class Program
   {
+
+	#region Define variables
 	private static byte[] _buffer = new byte[1024];
 	private static List<Socket> _clientSockets = new List<Socket>();
 	private static Socket _serverSocket = new Socket
 		(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-	Socket server;
 
-	private static Socket _serversocket = new Socket
-		  (AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+	#endregion
 	static void Main(string[] args)
 	{
 	  Console.Title = "Server";
 	  SetupServer();
 	  Console.ReadLine();
 	}
+
+	#region Define Methode's
 	private static void SetupServer()
 	{
 	  Console.WriteLine("Setting up server…");
-	  _serversocket.Bind(new IPEndPoint(IPAddress.Any, 100));
-	  _serversocket.Listen(1);
-	  _serversocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
+	  _serverSocket.Bind(new IPEndPoint(IPAddress.Any, 100));
+	  _serverSocket.Listen(7);
+	  _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
 	}
 	private static void AcceptCallback(IAsyncResult AR)
 	{
@@ -70,6 +73,6 @@ namespace SPGetTime.ServerCApp
 	  Socket socket = (Socket)AR.AsyncState;
 	  socket.EndSend(AR);
 	}
+	#endregion
   }
- 
 }
